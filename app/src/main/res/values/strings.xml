@@ -1,0 +1,7 @@
+<resources>
+
+  <string name="app_name">Magic Mirror Dashboard</string>
+
+  <string name="weather_condition">(%1$s° | %2$s°)</string>
+
+</resources>
