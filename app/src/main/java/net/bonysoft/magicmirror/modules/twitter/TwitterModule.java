@@ -21,6 +21,7 @@ public class TwitterModule implements DashboardModule {
     private final TwitterStream twitterStream;
     private final TwitterListener listener;
     private boolean running = false;
+    private TweetsFlowRegulator tweetsFlowRegulator;
 
     public static TwitterModule newInstance(TwitterListener listener) {
         ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
@@ -42,10 +43,11 @@ public class TwitterModule implements DashboardModule {
     }
 
     private void initStream() {
+        tweetsFlowRegulator = TweetsFlowRegulator.newInstance(listener);
         twitterStream.addListener(new StatusListener() {
             @Override
             public void onStatus(Status status) {
-                listener.onNextTweet(status);
+                tweetsFlowRegulator.addTweet(status);
             }
 
             @Override
@@ -82,11 +84,13 @@ public class TwitterModule implements DashboardModule {
         }
         running = true;
 
+        tweetsFlowRegulator.startTweetPicker();
         twitterStream.filter(QUERY);
     }
 
     @Override
     public void stop() {
+        tweetsFlowRegulator.stopTweetPicker();
         twitterStream.cleanUp();
         running = false;
     }
