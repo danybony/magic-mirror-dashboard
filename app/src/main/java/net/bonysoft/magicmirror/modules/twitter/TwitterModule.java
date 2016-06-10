@@ -2,18 +2,15 @@ package net.bonysoft.magicmirror.modules.twitter;
 
 import com.novoda.notils.logger.simple.Log;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import net.bonysoft.magicmirror.BuildConfig;
 import net.bonysoft.magicmirror.modules.DashboardModule;
 
-import twitter4j.Query;
-import twitter4j.QueryResult;
+import twitter4j.StallWarning;
 import twitter4j.Status;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
+import twitter4j.StatusDeletionNotice;
+import twitter4j.StatusListener;
+import twitter4j.TwitterStream;
+import twitter4j.TwitterStreamFactory;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
@@ -21,8 +18,9 @@ public class TwitterModule implements DashboardModule {
 
     private static final String QUERY = "#droidconde";
 
-    private final Twitter twitter;
+    private final TwitterStream twitterStream;
     private final TwitterListener listener;
+    private boolean running = false;
 
     public static TwitterModule newInstance(TwitterListener listener) {
         ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
@@ -32,37 +30,65 @@ public class TwitterModule implements DashboardModule {
                 .setOAuthAccessToken(BuildConfig.TWITTER_ACCESS_TOKEN)
                 .setOAuthAccessTokenSecret(BuildConfig.TWITTER_ACCESS_TOKEN_SECRET)
                 .build();
-        Twitter twitter = new TwitterFactory(configuration).getInstance();
-        return new TwitterModule(twitter, listener);
+        TwitterStream twitterStream = new TwitterStreamFactory(configuration).getInstance();
+        return new TwitterModule(twitterStream, listener);
     }
 
-    TwitterModule(Twitter twitter, TwitterListener listener) {
-        this.twitter = twitter;
+    TwitterModule(TwitterStream twitterStream, TwitterListener listener) {
+        this.twitterStream = twitterStream;
         this.listener = listener;
+
+        initStream();
     }
 
-    @Override
-    public void update() {
-
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
-        executorService.execute(new Runnable() {
+    private void initStream() {
+        twitterStream.addListener(new StatusListener() {
             @Override
-            public void run() {
-                try {
-                    Query query = new Query(QUERY);
-                    QueryResult searchResult = twitter.search(query);
+            public void onStatus(Status status) {
+                listener.onNextTweet(status);
+            }
 
-                    // TODO: iterate and show all of them with delay
-                    listener.onNextTweet(searchResult.getTweets().get(0));
-                } catch (TwitterException e) {
-                    Log.e(e, "Error searching for new tweets");
-                }
+            @Override
+            public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {
+                // No-op
+            }
+
+            @Override
+            public void onTrackLimitationNotice(int numberOfLimitedStatuses) {
+                // No-op
+            }
+
+            @Override
+            public void onScrubGeo(long userId, long upToStatusId) {
+                // No-op
+            }
+
+            @Override
+            public void onStallWarning(StallWarning warning) {
+                Log.w(warning);
+            }
+
+            @Override
+            public void onException(Exception ex) {
+                Log.e(ex);
             }
         });
     }
 
     @Override
+    public void update() {
+        if (running) {
+            return;
+        }
+        running = true;
+
+        twitterStream.filter(QUERY);
+    }
+
+    @Override
     public void stop() {
+        twitterStream.cleanUp();
+        running = false;
     }
 
     public interface TwitterListener {
