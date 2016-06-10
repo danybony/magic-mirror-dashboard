@@ -22,6 +22,15 @@
             </intent-filter>
         </activity>
 
+        <activity android:name="net.bonysoft.magicmirror.settings.SettingsActivity"
+          android:label="@string/settings">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+
         <receiver android:name="net.bonysoft.magicmirror.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         List<DashboardModule> modulesList = new ArrayList<>();
         modulesList.add(new TimeModule(timeLabel, dateLabel));
         modulesList.add(WeatherModule.newInstance(this, weatherListener));
-        modulesList.add(TwitterModule.newInstance(tweetListener));
+        modulesList.add(TwitterModule.newInstance(this, tweetListener));
 
         modules = new DashboardModuleComposite(modulesList);
     }

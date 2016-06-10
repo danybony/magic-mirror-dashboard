@@ -1,8 +1,12 @@
 package net.bonysoft.magicmirror.modules.twitter;
 
+import android.content.Context;
+import android.preference.PreferenceManager;
+
 import com.novoda.notils.logger.simple.Log;
 
 import net.bonysoft.magicmirror.BuildConfig;
+import net.bonysoft.magicmirror.R;
 import net.bonysoft.magicmirror.modules.DashboardModule;
 
 import twitter4j.StallWarning;
@@ -16,14 +20,15 @@ import twitter4j.conf.ConfigurationBuilder;
 
 public class TwitterModule implements DashboardModule {
 
-    private static final String QUERY = "#droidconde";
+    private static final String DEFAULT_QUERY = "#droidconde";
 
     private final TwitterStream twitterStream;
+    private final String query;
     private final TwitterListener listener;
     private boolean running = false;
     private TweetsFlowRegulator tweetsFlowRegulator;
 
-    public static TwitterModule newInstance(TwitterListener listener) {
+    public static TwitterModule newInstance(Context context, TwitterListener listener) {
         ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
         Configuration configuration = configurationBuilder
                 .setOAuthConsumerKey(BuildConfig.TWITTER_CONSUMER_KEY)
@@ -32,11 +37,15 @@ public class TwitterModule implements DashboardModule {
                 .setOAuthAccessTokenSecret(BuildConfig.TWITTER_ACCESS_TOKEN_SECRET)
                 .build();
         TwitterStream twitterStream = new TwitterStreamFactory(configuration).getInstance();
-        return new TwitterModule(twitterStream, listener);
+
+        String preferencesKey = context.getString(R.string.preference_key_tweet_filter);
+        String query = PreferenceManager.getDefaultSharedPreferences(context).getString(preferencesKey, DEFAULT_QUERY);
+        return new TwitterModule(twitterStream, query, listener);
     }
 
-    TwitterModule(TwitterStream twitterStream, TwitterListener listener) {
+    TwitterModule(TwitterStream twitterStream, String query, TwitterListener listener) {
         this.twitterStream = twitterStream;
+        this.query = query;
         this.listener = listener;
 
         initStream();
@@ -85,7 +94,7 @@ public class TwitterModule implements DashboardModule {
         running = true;
 
         tweetsFlowRegulator.startTweetPicker();
-        twitterStream.filter(QUERY);
+        twitterStream.filter(query);
     }
 
     @Override
