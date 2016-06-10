@@ -1,7 +1,7 @@
 <resources>
 
-  <string name="app_name">Magic Mirror Dashboard</string>
-  <string name="settings">Magic Mirror Settings</string>
+  <string name="app_name">Magic Mirror</string>
+  <string name="settings">Mirror Settings</string>
 
   <string name="header_title_twitter">Twitter module</string>
   <string name="preference_twitter_filter_title">Query filter</string>

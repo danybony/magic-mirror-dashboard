@@ -23,7 +23,8 @@
         </activity>
 
         <activity android:name="net.bonysoft.magicmirror.settings.SettingsActivity"
-          android:label="@string/settings">
+          android:label="@string/settings"
+          android:icon="@mipmap/ic_settings">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
