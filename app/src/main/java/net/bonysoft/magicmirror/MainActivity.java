@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import android.text.style.StyleSpan;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -171,11 +172,15 @@ public class MainActivity extends AppCompatActivity {
     private void displayTweet(Status tweet) {
         SpannableStringBuilder userHandle = highlightUserHandle(tweet.getUser().getScreenName());
 
-        CharSequence text = TextUtils.concat(
+        final CharSequence text = TextUtils.concat(
                 userHandle,
                 "\n",
                 tweet.getText()
         );
+
+        final AlphaAnimation fadeIn = new AlphaAnimation(0.0f, 1.0f);
+        fadeIn.setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime));
+        tweetLabel.startAnimation(fadeIn);
         tweetLabel.setText(text);
     }
 
