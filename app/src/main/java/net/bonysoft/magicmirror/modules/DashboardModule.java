@@ -4,4 +4,6 @@ public interface DashboardModule {
 
     void update();
 
+    void stop();
+
 }

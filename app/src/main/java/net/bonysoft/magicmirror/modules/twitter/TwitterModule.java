@@ -61,6 +61,10 @@ public class TwitterModule implements DashboardModule {
         });
     }
 
+    @Override
+    public void stop() {
+    }
+
     public interface TwitterListener {
 
         void onNextTweet(Status tweet);

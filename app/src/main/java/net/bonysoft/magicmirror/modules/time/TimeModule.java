@@ -41,4 +41,10 @@ public class TimeModule implements DashboardModule {
         String formattedDate = DAY_DAYMONTH_MONTH.print(dateTime);
         dateLabel.setText(formattedDate);
     }
+
+    @Override
+    public void stop() {
+        // no-op
+    }
+
 }

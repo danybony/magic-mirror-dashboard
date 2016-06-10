@@ -156,6 +156,11 @@ public class WeatherModule implements DashboardModule {
         }
     }
 
+    @Override
+    public void stop() {
+        // no-op
+    }
+
     public interface WeatherListener {
 
         void onCurrentWeatherFetched(WeatherInfo currentInfo);

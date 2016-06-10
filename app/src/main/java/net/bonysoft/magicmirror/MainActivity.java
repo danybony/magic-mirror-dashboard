@@ -101,6 +101,12 @@ public class MainActivity extends AppCompatActivity {
         systemUIHider.showSystemUi();
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        modules.stop();
+    }
+
     private final BroadcastReceiver timeTickReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {

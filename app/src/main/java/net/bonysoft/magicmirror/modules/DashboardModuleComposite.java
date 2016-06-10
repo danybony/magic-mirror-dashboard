@@ -17,4 +17,11 @@ public class DashboardModuleComposite implements DashboardModule {
         }
     }
 
+    @Override
+    public void stop() {
+        for (DashboardModule module : modules) {
+            module.stop();
+        }
+    }
+
 }
