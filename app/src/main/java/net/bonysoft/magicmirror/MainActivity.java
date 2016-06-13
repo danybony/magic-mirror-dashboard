@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -149,7 +148,6 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    @NonNull
     private DecimalFormat getTemperatureFormat() {
         DecimalFormat temperatureFormat = new DecimalFormat("#.#");
         temperatureFormat.setRoundingMode(RoundingMode.HALF_DOWN);
@@ -172,23 +170,22 @@ public class MainActivity extends AppCompatActivity {
     private void displayTweet(Status tweet) {
         SpannableStringBuilder userHandle = highlightUserHandle(tweet.getUser().getScreenName());
 
-        final CharSequence text = TextUtils.concat(
+        CharSequence text = TextUtils.concat(
                 userHandle,
                 "\n",
                 tweet.getText()
         );
 
-        final AlphaAnimation fadeIn = new AlphaAnimation(0.0f, 1.0f);
+        AlphaAnimation fadeIn = new AlphaAnimation(0.0f, 1.0f);
         fadeIn.setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime));
         tweetLabel.startAnimation(fadeIn);
         tweetLabel.setText(text);
     }
 
-    @NonNull
     private SpannableStringBuilder highlightUserHandle(String handle) {
         SpannableStringBuilder userHandle = new SpannableStringBuilder("@" + handle);
-        StyleSpan iss = new StyleSpan(Typeface.BOLD_ITALIC);
-        userHandle.setSpan(iss, 0, userHandle.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        StyleSpan style = new StyleSpan(Typeface.BOLD_ITALIC);
+        userHandle.setSpan(style, 0, userHandle.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         return userHandle;
     }
 }
