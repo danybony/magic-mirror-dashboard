@@ -25,8 +25,8 @@ public class WeatherModule implements DashboardModule {
     private static final long MIN_UPDATE_DELAY = TimeUnit.MINUTES.toMillis(10);
     private static final String API_KEY = BuildConfig.OPENWEATHERMAP_API_KEY;
 
-    private static final double LONDON_LONGITUDE = -0.0956086;
-    private static final double LONDON_LATITUDE = 51.541549;
+    private static final double BERLIN_LONGITUDE = 13.4368453;
+    private static final double BERLIN_LATITUDE = 52.5084802;
 
     private final WeatherClient client;
     private final WeatherListener weatherListener;
@@ -75,8 +75,8 @@ public class WeatherModule implements DashboardModule {
         lastUpdate = System.currentTimeMillis();
 
         // TODO: get current devicePosition
-        double longitude = LONDON_LONGITUDE;
-        double latitude = LONDON_LATITUDE;
+        double longitude = BERLIN_LONGITUDE;
+        double latitude = BERLIN_LATITUDE;
         WeatherRequest request = new WeatherRequest(longitude, latitude);
 
         client.getCurrentCondition(request, new CurrentWeatherListener(weatherListener));
@@ -154,6 +154,11 @@ public class WeatherModule implements DashboardModule {
             Log.e(e, "Error while fetching weather forecast");
             weatherListener.onTodayForecastUnavailable();
         }
+    }
+
+    @Override
+    public void stop() {
+        // no-op
     }
 
     public interface WeatherListener {

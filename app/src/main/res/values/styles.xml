@@ -21,6 +21,10 @@
     <item name="android:textSize">@dimen/date_text</item>
   </style>
 
+  <style name="Label.Tweet">
+    <item name="android:textSize">@dimen/tweet_text</item>
+  </style>
+
   <style name="Label.Weather" />
 
   <style name="Label.Weather.Temperature">

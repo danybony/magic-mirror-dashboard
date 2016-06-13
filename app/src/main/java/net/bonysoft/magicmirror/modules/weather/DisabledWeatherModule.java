@@ -15,4 +15,9 @@ class DisabledWeatherModule implements DashboardModule {
         weatherListener.onCurrentWeatherUnavailable();
     }
 
+    @Override
+    public void stop() {
+        // no-op
+    }
+
 }

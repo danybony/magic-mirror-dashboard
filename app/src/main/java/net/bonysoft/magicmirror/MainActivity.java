@@ -4,27 +4,35 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.novoda.notils.caster.Views;
 
-import net.bonysoft.magicmirror.modules.DashboardModule;
-import net.bonysoft.magicmirror.modules.DashboardModuleComposite;
-import net.bonysoft.magicmirror.modules.time.TimeModule;
-import net.bonysoft.magicmirror.modules.weather.WeatherIconMapper;
-import net.bonysoft.magicmirror.modules.weather.WeatherInfo;
-import net.bonysoft.magicmirror.modules.weather.WeatherModule;
-
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import net.bonysoft.magicmirror.modules.DashboardModule;
+import net.bonysoft.magicmirror.modules.DashboardModuleComposite;
+import net.bonysoft.magicmirror.modules.time.TimeModule;
+import net.bonysoft.magicmirror.modules.twitter.TwitterModule;
+import net.bonysoft.magicmirror.modules.weather.WeatherIconMapper;
+import net.bonysoft.magicmirror.modules.weather.WeatherInfo;
+import net.bonysoft.magicmirror.modules.weather.WeatherModule;
+
+import twitter4j.Status;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView timeLabel;
     private TextView dateLabel;
+    private TextView tweetLabel;
     private TextView weatherTemperatureLabel;
     private TextView todayForecastLabel;
     private DashboardModule modules;
@@ -44,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
         timeLabel = Views.findById(this, R.id.label_time);
         dateLabel = Views.findById(this, R.id.label_date);
+        tweetLabel = Views.findById(this, R.id.label_tweet);
         weatherTemperatureLabel = Views.findById(this, R.id.label_weather_temperature);
         todayForecastLabel = Views.findById(this, R.id.label_today_forecast);
         todayForecastIcon = Views.findById(this, R.id.weather_icon);
@@ -62,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         List<DashboardModule> modulesList = new ArrayList<>();
         modulesList.add(new TimeModule(timeLabel, dateLabel));
         modulesList.add(WeatherModule.newInstance(this, weatherListener));
+        modulesList.add(TwitterModule.newInstance(this, tweetListener));
 
         modules = new DashboardModuleComposite(modulesList);
     }
@@ -88,6 +99,12 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         unregisterReceiver(timeTickReceiver);
         systemUIHider.showSystemUi();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        modules.stop();
     }
 
     private final BroadcastReceiver timeTickReceiver = new BroadcastReceiver() {
@@ -131,10 +148,44 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    @NonNull
     private DecimalFormat getTemperatureFormat() {
         DecimalFormat temperatureFormat = new DecimalFormat("#.#");
         temperatureFormat.setRoundingMode(RoundingMode.HALF_DOWN);
         return temperatureFormat;
+    }
+
+    private final TwitterModule.TwitterListener tweetListener = new TwitterModule.TwitterListener() {
+
+        @Override
+        public void onNextTweet(final Status tweet) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    displayTweet(tweet);
+                }
+            });
+        }
+    };
+
+    private void displayTweet(Status tweet) {
+        SpannableStringBuilder userHandle = highlightUserHandle(tweet.getUser().getScreenName());
+
+        CharSequence text = TextUtils.concat(
+                userHandle,
+                "\n",
+                tweet.getText()
+        );
+
+        AlphaAnimation fadeIn = new AlphaAnimation(0.0f, 1.0f);
+        fadeIn.setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime));
+        tweetLabel.startAnimation(fadeIn);
+        tweetLabel.setText(text);
+    }
+
+    private SpannableStringBuilder highlightUserHandle(String handle) {
+        SpannableStringBuilder userHandle = new SpannableStringBuilder("@" + handle);
+        StyleSpan style = new StyleSpan(Typeface.BOLD_ITALIC);
+        userHandle.setSpan(style, 0, userHandle.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        return userHandle;
     }
 }
