@@ -2,6 +2,7 @@
 
   <string name="app_name">Magic Mirror</string>
   <string name="settings">Mirror Settings</string>
+  <string name="face_recognition">Mirror Face Recognition</string>
 
   <string name="header_title_twitter">Twitter module</string>
   <string name="preference_twitter_filter_title">Query filter</string>
