@@ -29,14 +29,6 @@ class TweetsFlowRegulator {
         this.tweetPickerAction = new TweetPicker(tweetsBuffer, listener);
     }
 
-    private final Runnable refreshAction = new Runnable() {
-        @Override
-        public void run() {
-            handler.post(tweetPickerAction);
-            scheduleNextBeat();
-        }
-    };
-
     private void scheduleNextBeat() {
         handler.postDelayed(refreshAction, REFRESH_DELAY_MILLIS);
     }
@@ -52,6 +44,14 @@ class TweetsFlowRegulator {
     void addTweet(Status tweet) {
         tweetsBuffer.addTweet(tweet);
     }
+
+    private final Runnable refreshAction = new Runnable() {
+        @Override
+        public void run() {
+            handler.post(tweetPickerAction);
+            scheduleNextBeat();
+        }
+    };
 
     private static class TweetPicker implements Runnable {
 
