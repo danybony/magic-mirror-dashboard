@@ -9,10 +9,16 @@
   android:paddingTop="@dimen/activity_vertical_margin"
   tools:context="net.bonysoft.magicmirror.FaceRecognitionActivity">
 
+  <net.bonysoft.magicmirror.facerecognition.CameraSourcePreview
+    android:id="@+id/preview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
+
   <TextView
-    android:layout_gravity="center"
+    android:id="@+id/status"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="Display amazzzing emojis here" />
+    android:layout_gravity="center"
+    tools:text="Display amazzzing emojis here" />
 
 </FrameLayout>
