@@ -15,14 +15,14 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.MultiProcessor;
-import com.google.android.gms.vision.Tracker;
-import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 import com.novoda.notils.logger.simple.Log;
 
 import java.io.IOException;
 
 import net.bonysoft.magicmirror.facerecognition.CameraSourcePreview;
+import net.bonysoft.magicmirror.facerecognition.FaceExpression;
+import net.bonysoft.magicmirror.facerecognition.FaceTracker;
 
 public class FaceRecognitionActivity extends AppCompatActivity {
 
@@ -35,14 +35,14 @@ public class FaceRecognitionActivity extends AppCompatActivity {
     private CameraSourcePreview preview;
 
     private SystemUIHider systemUIHider;
-    private TextView textViewStatus;
+    private TextView faceStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_face_recognition);
 
-        textViewStatus = (TextView) findViewById(R.id.status);
+        faceStatus = (TextView) findViewById(R.id.status);
         preview = (CameraSourcePreview) findViewById(R.id.preview);
 
         systemUIHider = new SystemUIHider(findViewById(android.R.id.content));
@@ -78,12 +78,12 @@ public class FaceRecognitionActivity extends AppCompatActivity {
                 .build();
 
         detector.setProcessor(
-                new MultiProcessor.Builder<>(new GraphicFaceTrackerFactory())
+                new MultiProcessor.Builder<>(new FaceTracker.Factory(faceListener))
                         .build()
         );
 
         if (!detector.isOperational()) {
-            textViewStatus.setText(R.string.face_detection_not_available_error);
+            Toast.makeText(this, R.string.face_detection_not_available_error, Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -149,49 +149,16 @@ public class FaceRecognitionActivity extends AppCompatActivity {
         systemUIHider.showSystemUi();
     }
 
-    private class GraphicFaceTrackerFactory implements MultiProcessor.Factory<Face> {
+    private FaceTracker.FaceListener faceListener = new FaceTracker.FaceListener() {
         @Override
-        public Tracker<Face> create(Face face) {
-            return new GraphicFaceTracker();
-        }
-    }
-
-    private class GraphicFaceTracker extends Tracker<Face> {
-
-        @Override
-        public void onUpdate(FaceDetector.Detections<Face> detectionResults, Face face) {
-            float smiling = face.getIsSmilingProbability();
-            String currentFeeling;
-            if (smiling <= 0.1) {
-                currentFeeling = ":-(";
-            } else if (smiling <= 0.3) {
-                currentFeeling = ":-/";
-            } else if (smiling <= 0.5) {
-                currentFeeling = ":-)";
-            } else {
-                currentFeeling = "boh :-D ?";
-            }
-            updateMessage(String.valueOf(smiling) + " " + currentFeeling);
-        }
-
-        @Override
-        public void onMissing(FaceDetector.Detections<Face> detectionResults) {
-            updateMessage("O_O");
-        }
-
-        @Override
-        public void onDone() {
-            updateMessage("O_O");
-        }
-
-        private void updateMessage(final String currentFeeling) {
+        public void onNewFace(final FaceExpression expression) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    textViewStatus.setText(currentFeeling);
+                    faceStatus.setText(expression.toString());
                 }
             });
         }
-    }
+    };
 
 }
