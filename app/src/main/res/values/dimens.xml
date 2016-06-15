@@ -12,4 +12,6 @@
   <dimen name="weather_icon_width">150dp</dimen>
   <dimen name="weather_icon_height">150dp</dimen>
 
+  <dimen name="face_recognition_text">100sp</dimen>
+
 </resources>

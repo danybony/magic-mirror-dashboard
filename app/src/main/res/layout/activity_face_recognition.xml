@@ -21,9 +21,9 @@
 
   <TextView
     android:id="@+id/status"
+    style="@style/Label.FaceStatus"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    tools:text="Display amazzzing emojis here" />
+    android:layout_gravity="center" />
 
 </FrameLayout>
