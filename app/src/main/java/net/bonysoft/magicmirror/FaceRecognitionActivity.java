@@ -15,6 +15,24 @@ public class FaceRecognitionActivity extends AppCompatActivity {
 
         systemUIHider = new SystemUIHider(findViewById(android.R.id.content));
         keepScreenOn();
+
+        boolean hasCamera = getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT);
+        if (!hasCamera) {
+            Toast.makeText(this, R.string.no_camera_available_error, Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{Manifest.permission.CAMERA},
+                    CAMERA_PERMISSION_REQUEST
+            );
+        } else {
+            // TODO: init camera source
+        }
+
     }
 
     private void keepScreenOn() {
@@ -25,6 +43,21 @@ public class FaceRecognitionActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         systemUIHider.hideSystemUi();
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == CAMERA_PERMISSION_REQUEST) {
+            if (isPermissionGranted(grantResults)) {
+                // TODO: init camera source
+            } else {
+                Log.e("User denied CAMERA permission");
+                finish();
+            }
+        }
+    }
+
+    private boolean isPermissionGranted(@NonNull int[] grantResults) {
+        return grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
     }
 
     @Override

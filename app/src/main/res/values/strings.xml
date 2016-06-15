@@ -10,4 +10,6 @@
 
   <string name="weather_condition">(%1$s° | %2$s°)</string>
 
+  <string name="no_camera_available_error">No front camera available error</string>
+
 </resources>
