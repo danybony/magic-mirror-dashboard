@@ -65,7 +65,7 @@ public class FaceRecognitionActivity extends AppCompatActivity {
             createCameraSource();
         }
 
-        checkForPlayServices();
+        displayErrorIfPlayServicesMissing();
     }
 
     private void keepScreenOn() {
@@ -94,7 +94,7 @@ public class FaceRecognitionActivity extends AppCompatActivity {
                 .build();
     }
 
-    private void checkForPlayServices() {
+    private void displayErrorIfPlayServicesMissing() {
         int code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
         if (code != ConnectionResult.SUCCESS) {
             Dialog dlg = GoogleApiAvailability.getInstance().getErrorDialog(this, code, 101);
@@ -149,7 +149,7 @@ public class FaceRecognitionActivity extends AppCompatActivity {
         systemUIHider.showSystemUi();
     }
 
-    private FaceTracker.FaceListener faceListener = new FaceTracker.FaceListener() {
+    private final FaceTracker.FaceListener faceListener = new FaceTracker.FaceListener() {
         @Override
         public void onNewFace(final FaceExpression expression) {
             runOnUiThread(new Runnable() {
