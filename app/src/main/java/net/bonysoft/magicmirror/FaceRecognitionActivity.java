@@ -142,11 +142,17 @@ public class FaceRecognitionActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        preview.stop();
+        systemUIHider.showSystemUi();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         if (cameraSource != null) {
             cameraSource.release();
             cameraSource = null;
         }
-        systemUIHider.showSystemUi();
     }
 
     private final FaceTracker.FaceListener faceListener = new FaceTracker.FaceListener() {

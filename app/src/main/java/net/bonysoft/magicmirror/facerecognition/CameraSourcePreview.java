@@ -63,7 +63,7 @@ public class CameraSourcePreview extends ViewGroup {
         startIfReady();
     }
 
-    private void stop() {
+    public void stop() {
         if (cameraSource != null) {
             cameraSource.stop();
         }
