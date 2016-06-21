@@ -28,6 +28,7 @@ import net.bonysoft.magicmirror.facerecognition.KeyboardFaceSource;
 public class FaceRecognitionActivity extends AppCompatActivity {
 
     private static final int CAMERA_PERMISSION_REQUEST = 0;
+    private final DeviceInformation deviceInformation = new DeviceInformation();
 
     private FaceReactionSource faceSource;
     private CameraSourcePreview preview;
@@ -70,8 +71,7 @@ public class FaceRecognitionActivity extends AppCompatActivity {
     }
 
     private boolean isUsingCamera() {
-//        return BuildConfig.DEBUG;
-        return true;
+        return !deviceInformation.isEmulator();
     }
 
     private void keepScreenOn() {
