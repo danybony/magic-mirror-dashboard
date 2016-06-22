@@ -37,7 +37,6 @@ public class KeyboardFaceSourceTest {
     public void givenKeySadIsPressed_thenSadExpressionIsTriggered() {
         source.onKeyDown(CODE_SAD);
         verify(mockListener).onNewFace(FaceExpression.SAD);
-
     }
 
     @Test
