@@ -40,11 +40,14 @@ public class KeyboardFaceSourceTest {
     }
 
     @Test
-    public void givenKeySadIsPressedTwice_thenSadExpressionIsTriggeredOnlyOnce() {
-        // we are testing when user is keep the button pressed
-        source.onKeyDown(CODE_SAD);
-        source.onKeyDown(CODE_SAD);
+    public void givenKeySadIsPressedAndHold_thenSadExpressionIsTriggeredOnlyOnce() {
+        pressAndHold(CODE_SAD);
         verify(mockListener, times(1)).onNewFace(FaceExpression.SAD);
+    }
+
+    private void pressAndHold(int code) {
+        source.onKeyDown(code);
+        source.onKeyDown(code);
     }
 
     @Test
