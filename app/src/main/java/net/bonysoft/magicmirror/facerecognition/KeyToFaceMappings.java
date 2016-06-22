@@ -22,7 +22,7 @@ public class KeyToFaceMappings {
         this.faceExpressions = faceExpressions;
     }
 
-    public FaceExpression getFace(int keyCode) {
+    public FaceExpression getFaceFromKeyCode(int keyCode) {
         return faceExpressions.get(keyCode);
     }
 

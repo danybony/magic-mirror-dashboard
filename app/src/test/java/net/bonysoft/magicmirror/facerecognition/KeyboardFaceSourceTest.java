@@ -26,8 +26,8 @@ public class KeyboardFaceSourceTest {
     @Before
     public void setUp() throws Exception {
         source = new KeyboardFaceSource(mockListener, mockMappings);
-        when(mockMappings.getFace(CODE_SAD)).thenReturn(FaceExpression.SAD);
-        when(mockMappings.getFace(CODE_HAPPY)).thenReturn(FaceExpression.HAPPY);
+        when(mockMappings.getFaceFromKeyCode(CODE_SAD)).thenReturn(FaceExpression.SAD);
+        when(mockMappings.getFaceFromKeyCode(CODE_HAPPY)).thenReturn(FaceExpression.HAPPY);
 
         when(mockMappings.contains(CODE_HAPPY)).thenReturn(true);
         when(mockMappings.contains(CODE_SAD)).thenReturn(true);

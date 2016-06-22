@@ -18,7 +18,7 @@ public class KeyboardFaceSource implements FaceReactionSource {
         if (sameKeyCodeIsTriggered(keyCode)) {
             return false;
         }
-        FaceExpression faceExpression = mappings.getFace(keyCode);
+        FaceExpression faceExpression = mappings.getFaceFromKeyCode(keyCode);
         if (faceExpression != null) {
             currentExpression = faceExpression;
             faceListener.onNewFace(faceExpression);
@@ -29,7 +29,7 @@ public class KeyboardFaceSource implements FaceReactionSource {
     }
 
     private boolean sameKeyCodeIsTriggered(int keyCode) {
-        FaceExpression mappedExpression = mappings.getFace(keyCode);
+        FaceExpression mappedExpression = mappings.getFaceFromKeyCode(keyCode);
         if (mappedExpression == null) {
             return currentExpression == NEUTRAL_EXPRESSION;
         }
