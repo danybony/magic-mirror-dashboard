@@ -52,14 +52,12 @@ public class FaceCameraSource implements FaceReactionSource {
         } catch (IOException e) {
             Log.e(e, "Unable to start camera source.");
             cameraSource.release();
-            cameraSource = null;
         }
     }
 
     @Override
     public void release() {
         cameraSource.release();
-        cameraSource = null;
     }
 
     @Override
