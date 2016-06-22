@@ -45,4 +45,8 @@ dependencies {
     compile 'com.survivingwithandroid:weatherlib:1.6.0'
     compile 'com.survivingwithandroid:weatherlib_okhttpclient:1.6.0'
     compile 'com.squareup.okhttp:okhttp:2.0.0'
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.easytesting:fest-assert-core:2.0M10'
+    testCompile "org.mockito:mockito-core:1.10.19"
 }

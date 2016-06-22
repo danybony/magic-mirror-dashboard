@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,10 +22,13 @@ import net.bonysoft.magicmirror.facerecognition.FaceDetectionUnavailableExceptio
 import net.bonysoft.magicmirror.facerecognition.FaceExpression;
 import net.bonysoft.magicmirror.facerecognition.FaceReactionSource;
 import net.bonysoft.magicmirror.facerecognition.FaceTracker;
+import net.bonysoft.magicmirror.facerecognition.KeyToFaceMappings;
+import net.bonysoft.magicmirror.facerecognition.KeyboardFaceSource;
 
 public class FaceRecognitionActivity extends AppCompatActivity {
 
     private static final int CAMERA_PERMISSION_REQUEST = 0;
+    private final DeviceInformation deviceInformation = new DeviceInformation();
 
     private FaceReactionSource faceSource;
     private CameraSourcePreview preview;
@@ -50,20 +54,33 @@ public class FaceRecognitionActivity extends AppCompatActivity {
             return;
         }
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                    this,
-                    new String[]{Manifest.permission.CAMERA},
-                    CAMERA_PERMISSION_REQUEST
-            );
+        if (isUsingCamera()) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(
+                        this,
+                        new String[]{Manifest.permission.CAMERA},
+                        CAMERA_PERMISSION_REQUEST
+                );
+            } else {
+                tryToCreateCameraSource();
+            }
+            displayErrorIfPlayServicesMissing();
         } else {
-            tryToCreateCameraSource();
+            createKeyboardSource();
         }
-        displayErrorIfPlayServicesMissing();
+    }
+
+    private boolean isUsingCamera() {
+        return !deviceInformation.isEmulator();
     }
 
     private void keepScreenOn() {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+    private void createKeyboardSource() {
+        KeyToFaceMappings mappings = KeyToFaceMappings.newInstance();
+        faceSource = new KeyboardFaceSource(faceListener, mappings);
     }
 
     private void tryToCreateCameraSource() {
@@ -125,6 +142,22 @@ public class FaceRecognitionActivity extends AppCompatActivity {
         if (faceSourceHasBeenDefined()) {
             faceSource.release();
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (faceSource.onKeyDown(keyCode)) {
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (faceSource.onKeyUp(keyCode)) {
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
     }
 
     private final FaceTracker.FaceListener faceListener = new FaceTracker.FaceListener() {

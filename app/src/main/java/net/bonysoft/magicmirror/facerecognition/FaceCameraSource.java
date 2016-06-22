@@ -59,4 +59,14 @@ public class FaceCameraSource implements FaceReactionSource {
     public void release() {
         cameraSource.release();
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode) {
+        return false;
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode) {
+        return false;
+    }
 }
