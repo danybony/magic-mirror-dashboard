@@ -4,6 +4,9 @@ import android.os.Build;
 
 public class DeviceInformation {
 
+    /**
+     * Taken from http://stackoverflow.com/a/21505193/1315110
+     */
     public boolean isEmulator() {
         return Build.FINGERPRINT.startsWith("generic")
                 || Build.FINGERPRINT.startsWith("unknown")
