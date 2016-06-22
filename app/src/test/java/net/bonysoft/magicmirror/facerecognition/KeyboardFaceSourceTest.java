@@ -34,13 +34,13 @@ public class KeyboardFaceSourceTest {
     }
 
     @Test
-    public void givenKeySadIsPressed_thenSadExpressionIsTriggered() {
+    public void whenKeySadIsPressed_thenSadExpressionIsTriggered() {
         source.onKeyDown(CODE_SAD);
         verify(mockListener).onNewFace(FaceExpression.SAD);
     }
 
     @Test
-    public void givenKeySadIsPressedAndHold_thenSadExpressionIsTriggeredOnlyOnce() {
+    public void whenKeySadIsPressedAndHold_thenSadExpressionIsTriggeredOnlyOnce() {
         pressAndHold(CODE_SAD);
         verify(mockListener, times(1)).onNewFace(FaceExpression.SAD);
     }
@@ -51,20 +51,20 @@ public class KeyboardFaceSourceTest {
     }
 
     @Test
-    public void givenSadKeySadIsPressedAndReleased_thenLookingExpressionIsTriggered() {
-        givenKeySadIsPressed_thenSadExpressionIsTriggered();
+    public void whenSadKeySadIsPressedAndReleased_thenLookingExpressionIsTriggered() {
+        source.onKeyDown(CODE_SAD);
         source.onKeyUp(CODE_SAD);
         verify(mockListener).onNewFace(FaceExpression.LOOKING);
     }
 
     @Test
-    public void givenUnsupportedKeyIsPressed_thenNoCallbacksAreTriggered() {
+    public void whenUnsupportedKeyIsPressed_thenNoCallbacksAreTriggered() {
         source.onKeyDown(1337);
         verify(mockListener, times(0)).onNewFace(any(FaceExpression.class));
     }
 
     @Test
-    public void givenAnUnsupportedKeyIsPressedAfterASupportedKey_thenLookingExpressionIsTriggeredOnlyOnce() {
+    public void whenAnUnsupportedKeyIsPressedAfterASupportedKey_thenLookingExpressionIsTriggeredOnlyOnce() {
         onPressAndReleaseKey(CODE_HAPPY);
         onPressAndReleaseKey(2000);
         verify(mockListener, times(1)).onNewFace(FaceExpression.LOOKING);
