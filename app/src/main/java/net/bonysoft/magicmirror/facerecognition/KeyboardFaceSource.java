@@ -3,12 +3,11 @@ package net.bonysoft.magicmirror.facerecognition;
 public class KeyboardFaceSource implements FaceReactionSource {
 
     private static final FaceExpression NEUTRAL_EXPRESSION = FaceExpression.LOOKING;
-    private static final int KEY_NEUTRAL = -1;
 
     private final FaceTracker.FaceListener faceListener;
     private final KeyToFaceMappings mappings;
 
-    private int currentPress = KEY_NEUTRAL;
+    private FaceExpression currentExpression = FaceExpression.LOOKING;
 
     public KeyboardFaceSource(FaceTracker.FaceListener faceListener, KeyToFaceMappings mappings) {
         this.faceListener = faceListener;
@@ -16,33 +15,37 @@ public class KeyboardFaceSource implements FaceReactionSource {
     }
 
     public boolean onKeyDown(int keyCode) {
-        if (sameKeyCodeIsTriggered(keyCode) || isStillUnsupportedCode(keyCode)) {
+        if (sameKeyCodeIsTriggered(keyCode)) {
             return false;
         }
         FaceExpression faceExpression = mappings.getFace(keyCode);
         if (faceExpression != null) {
-            currentPress = keyCode;
+            currentExpression = faceExpression;
             faceListener.onNewFace(faceExpression);
             return true;
         }
-        currentPress = KEY_NEUTRAL;
+        currentExpression = NEUTRAL_EXPRESSION;
         return false;
     }
 
     private boolean sameKeyCodeIsTriggered(int keyCode) {
-        return currentPress == keyCode;
-    }
-
-    private boolean isStillUnsupportedCode(int keyCode) {
-        return currentPress == KEY_NEUTRAL && !mappings.contains(keyCode);
+        FaceExpression mappedExpression = mappings.getFace(keyCode);
+        if (mappedExpression == null) {
+            return currentExpression == NEUTRAL_EXPRESSION;
+        }
+        return currentExpression == mappedExpression;
     }
 
     public boolean onKeyUp(int keyCode) {
-        if (sameKeyCodeIsTriggered(keyCode)) {
+        if (holdsAnExpression() && sameKeyCodeIsTriggered(keyCode)) {
             faceListener.onNewFace(NEUTRAL_EXPRESSION);
-            currentPress = KEY_NEUTRAL;
+            currentExpression = NEUTRAL_EXPRESSION;
         }
         return true;
+    }
+
+    private boolean holdsAnExpression() {
+        return currentExpression != NEUTRAL_EXPRESSION;
     }
 
     @Override
