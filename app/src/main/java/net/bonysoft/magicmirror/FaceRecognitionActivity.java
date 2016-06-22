@@ -166,7 +166,6 @@ public class FaceRecognitionActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Log.d(expression.name());
                     faceStatus.setText(expression.toString());
                 }
             });
