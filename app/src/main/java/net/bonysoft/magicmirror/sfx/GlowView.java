@@ -5,10 +5,15 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.support.annotation.ColorRes;
+import android.support.v4.util.SparseArrayCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
 public class GlowView extends View {
+
+    private static final int TRANSITION_DURATION = 700;
+
+    private final SparseArrayCompat<ColorDrawable> colors = new SparseArrayCompat<>();
 
     public GlowView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -19,10 +24,19 @@ public class GlowView extends View {
         Drawable previousBackground = getPreviousDrawableSafely();
         TransitionDrawable transitionDrawable = new TransitionDrawable(new Drawable[]{
                 previousBackground,
-                new ColorDrawable(getColor(colorRes))
+                getOrCreateColorDrawableFor(colorRes)
         });
         setBackground(transitionDrawable);
-        transitionDrawable.startTransition(400);
+        transitionDrawable.startTransition(TRANSITION_DURATION);
+    }
+
+    private ColorDrawable getOrCreateColorDrawableFor(@ColorRes int colorRes) {
+        ColorDrawable colorDrawable = colors.get(colorRes);
+        if (colorDrawable == null) {
+            colorDrawable = new ColorDrawable(getColor(colorRes));
+            colors.put(colorRes, colorDrawable);
+        }
+        return colorDrawable;
     }
 
     private Drawable getPreviousDrawableSafely() {
