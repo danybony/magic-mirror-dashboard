@@ -14,14 +14,14 @@ import net.bonysoft.magicmirror.R;
 
 public class TodoItemsAdapter extends ArrayAdapter<CharSequence> {
 
-    private List<CharSequence> todoItems;
+    private final List<CharSequence> todoItems;
 
     public TodoItemsAdapter(Context context, int textViewResourceId, CharSequence[] todoItems) {
         super(context, textViewResourceId, todoItems);
         this.todoItems = Arrays.asList(todoItems);
     }
 
-    private class ViewHolder {
+    private static class ViewHolder {
         CheckBox todoItemCheck;
     }
 
