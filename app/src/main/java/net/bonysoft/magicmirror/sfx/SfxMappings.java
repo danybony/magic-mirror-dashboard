@@ -19,7 +19,7 @@ public final class SfxMappings {
         return new SfxMappings(mappings);
     }
 
-    public SfxMappings(Map<FaceExpression, FacialExpressionEffects> mappings) {
+    private SfxMappings(Map<FaceExpression, FacialExpressionEffects> mappings) {
         this.mappings = mappings;
     }
 
