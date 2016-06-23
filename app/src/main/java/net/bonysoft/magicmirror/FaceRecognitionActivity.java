@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.novoda.notils.caster.Views;
 import com.novoda.notils.logger.simple.Log;
 
 import net.bonysoft.magicmirror.facerecognition.CameraSourcePreview;
@@ -24,6 +25,9 @@ import net.bonysoft.magicmirror.facerecognition.FaceReactionSource;
 import net.bonysoft.magicmirror.facerecognition.FaceTracker;
 import net.bonysoft.magicmirror.facerecognition.KeyToFaceMappings;
 import net.bonysoft.magicmirror.facerecognition.KeyboardFaceSource;
+import net.bonysoft.magicmirror.sfx.FacialExpressionEffects;
+import net.bonysoft.magicmirror.sfx.GlowView;
+import net.bonysoft.magicmirror.sfx.SfxMappings;
 
 public class FaceRecognitionActivity extends AppCompatActivity {
 
@@ -35,14 +39,16 @@ public class FaceRecognitionActivity extends AppCompatActivity {
 
     private SystemUIHider systemUIHider;
     private TextView faceStatus;
+    private GlowView glowView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_face_recognition);
 
-        faceStatus = (TextView) findViewById(R.id.status);
-        preview = (CameraSourcePreview) findViewById(R.id.preview);
+        faceStatus = Views.findById(this, R.id.status);
+        preview = Views.findById(this, R.id.preview);
+        glowView = Views.findById(this, R.id.glow_background);
 
         systemUIHider = new SystemUIHider(findViewById(android.R.id.content));
         keepScreenOn();
@@ -161,11 +167,16 @@ public class FaceRecognitionActivity extends AppCompatActivity {
     }
 
     private final FaceTracker.FaceListener faceListener = new FaceTracker.FaceListener() {
+
+        private final SfxMappings mappings = SfxMappings.newInstance();
+
         @Override
         public void onNewFace(final FaceExpression expression) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    FacialExpressionEffects effects = mappings.forExpression(expression);
+                    glowView.transitionToColor(effects.glowColorRes());
                     faceStatus.setText(expression.toString());
                 }
             });
