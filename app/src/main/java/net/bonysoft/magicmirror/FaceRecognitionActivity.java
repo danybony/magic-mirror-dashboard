@@ -7,31 +7,30 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.vision.CameraSource;
-import com.google.android.gms.vision.MultiProcessor;
-import com.google.android.gms.vision.face.FaceDetector;
 import com.novoda.notils.logger.simple.Log;
 
-import java.io.IOException;
-
 import net.bonysoft.magicmirror.facerecognition.CameraSourcePreview;
+import net.bonysoft.magicmirror.facerecognition.FaceCameraSource;
+import net.bonysoft.magicmirror.facerecognition.FaceDetectionUnavailableException;
 import net.bonysoft.magicmirror.facerecognition.FaceExpression;
+import net.bonysoft.magicmirror.facerecognition.FaceReactionSource;
 import net.bonysoft.magicmirror.facerecognition.FaceTracker;
+import net.bonysoft.magicmirror.facerecognition.KeyToFaceMappings;
+import net.bonysoft.magicmirror.facerecognition.KeyboardFaceSource;
 
 public class FaceRecognitionActivity extends AppCompatActivity {
 
     private static final int CAMERA_PERMISSION_REQUEST = 0;
-    private static final float CAMERA_SOURCE_REQUESTED_FPS = 30.0f;
-    private static final int CAMERA_SOURCE_WIDTH = 640;
-    private static final int CAMERA_SOURCE_HEIGHT = 360;
+    private final DeviceInformation deviceInformation = new DeviceInformation();
 
-    private CameraSource cameraSource = null;
+    private FaceReactionSource faceSource;
     private CameraSourcePreview preview;
 
     private SystemUIHider systemUIHider;
@@ -55,43 +54,41 @@ public class FaceRecognitionActivity extends AppCompatActivity {
             return;
         }
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                    this,
-                    new String[]{Manifest.permission.CAMERA},
-                    CAMERA_PERMISSION_REQUEST
-            );
+        if (isUsingCamera()) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(
+                        this,
+                        new String[]{Manifest.permission.CAMERA},
+                        CAMERA_PERMISSION_REQUEST
+                );
+            } else {
+                tryToCreateCameraSource();
+            }
+            displayErrorIfPlayServicesMissing();
         } else {
-            createCameraSource();
+            createKeyboardSource();
         }
+    }
 
-        displayErrorIfPlayServicesMissing();
+    private boolean isUsingCamera() {
+        return !deviceInformation.isEmulator();
     }
 
     private void keepScreenOn() {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
-    private void createCameraSource() {
-        FaceDetector detector = new FaceDetector.Builder(this)
-                .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
-                .build();
+    private void createKeyboardSource() {
+        KeyToFaceMappings mappings = KeyToFaceMappings.newInstance();
+        faceSource = new KeyboardFaceSource(faceListener, mappings);
+    }
 
-        detector.setProcessor(
-                new MultiProcessor.Builder<>(new FaceTracker.Factory(faceListener))
-                        .build()
-        );
-
-        if (!detector.isOperational()) {
+    private void tryToCreateCameraSource() {
+        try {
+            faceSource = FaceCameraSource.createFrom(this, faceListener, preview);
+        } catch (FaceDetectionUnavailableException e) {
             Toast.makeText(this, R.string.face_detection_not_available_error, Toast.LENGTH_LONG).show();
-            return;
         }
-
-        cameraSource = new CameraSource.Builder(this, detector)
-                .setRequestedPreviewSize(CAMERA_SOURCE_WIDTH, CAMERA_SOURCE_HEIGHT)
-                .setFacing(CameraSource.CAMERA_FACING_FRONT)
-                .setRequestedFps(CAMERA_SOURCE_REQUESTED_FPS)
-                .build();
     }
 
     private void displayErrorIfPlayServicesMissing() {
@@ -107,27 +104,20 @@ public class FaceRecognitionActivity extends AppCompatActivity {
         super.onResume();
         systemUIHider.hideSystemUi();
 
-        startCameraSource();
+        if (faceSourceHasBeenDefined()) {
+            faceSource.start();
+        }
     }
 
-    private void startCameraSource() {
-        if (cameraSource == null) {
-            return;
-        }
-        try {
-            preview.start(cameraSource);
-        } catch (IOException e) {
-            Log.e("Unable to start camera source.", e);
-            cameraSource.release();
-            cameraSource = null;
-        }
+    private boolean faceSourceHasBeenDefined() {
+        return faceSource != null;
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == CAMERA_PERMISSION_REQUEST) {
             if (isPermissionGranted(grantResults)) {
-                createCameraSource();
+                tryToCreateCameraSource();
             } else {
                 Log.e("User denied CAMERA permission");
                 finish();
@@ -149,10 +139,25 @@ public class FaceRecognitionActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (cameraSource != null) {
-            cameraSource.release();
-            cameraSource = null;
+        if (faceSourceHasBeenDefined()) {
+            faceSource.release();
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (faceSource.onKeyDown(keyCode)) {
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (faceSource.onKeyUp(keyCode)) {
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
     }
 
     private final FaceTracker.FaceListener faceListener = new FaceTracker.FaceListener() {
@@ -166,5 +171,4 @@ public class FaceRecognitionActivity extends AppCompatActivity {
             });
         }
     };
-
 }
