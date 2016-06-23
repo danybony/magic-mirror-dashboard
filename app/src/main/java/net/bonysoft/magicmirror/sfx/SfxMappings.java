@@ -9,7 +9,7 @@ public final class SfxMappings {
 
     private final Map<FaceExpression, FacialExpressionEffects> mappings;
 
-    public static SfxMappings build() {
+    public static SfxMappings newInstance() {
         Map<FaceExpression, FacialExpressionEffects> mappings = new HashMap<>();
         mappings.put(FaceExpression.SAD, FacialExpressionEffects.SAD);
         mappings.put(FaceExpression.NEUTRAL, FacialExpressionEffects.NEUTRAL);

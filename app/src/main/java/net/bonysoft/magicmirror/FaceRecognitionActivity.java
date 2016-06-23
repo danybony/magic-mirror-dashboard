@@ -168,7 +168,7 @@ public class FaceRecognitionActivity extends AppCompatActivity {
 
     private final FaceTracker.FaceListener faceListener = new FaceTracker.FaceListener() {
 
-        private final SfxMappings mappings = SfxMappings.build();
+        private final SfxMappings mappings = SfxMappings.newInstance();
 
         @Override
         public void onNewFace(final FaceExpression expression) {
