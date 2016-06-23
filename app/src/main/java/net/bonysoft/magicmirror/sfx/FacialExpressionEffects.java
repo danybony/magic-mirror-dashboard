@@ -12,7 +12,7 @@ public enum FacialExpressionEffects {
     JOYFUL(R.color.jolly_pink);
 
     @ColorRes
-    private int glowColorRes;
+    private final int glowColorRes;
 
     FacialExpressionEffects(@ColorRes int glowColorRes) {
         this.glowColorRes = glowColorRes;
