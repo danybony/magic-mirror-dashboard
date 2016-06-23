@@ -44,14 +44,20 @@
     android:visibility="gone"
     tools:text="Tweeeet" />
 
-  <ListView
-    android:id="@+id/todo_list"
-    android:layout_width="match_parent"
+  <FrameLayout
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_above="@+id/weather_container"
-    android:layout_below="@+id/time_container"
-    android:layout_centerVertical="true"
-    android:divider="@color/activity_background" />
+    android:layout_below="@+id/time_container">
+
+    <ListView
+      android:id="@+id/todo_list"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_vertical"
+      android:divider="@color/activity_background" />
+
+  </FrameLayout>
 
   <LinearLayout
     android:id="@+id/weather_container"
