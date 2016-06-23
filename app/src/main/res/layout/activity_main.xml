@@ -41,6 +41,7 @@
     android:layout_above="@+id/weather_container"
     android:layout_below="@+id/time_container"
     android:layout_gravity="center_vertical"
+    android:visibility="gone"
     tools:text="Tweeeet" />
 
   <ListView
