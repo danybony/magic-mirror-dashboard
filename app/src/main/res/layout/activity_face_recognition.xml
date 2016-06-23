@@ -14,7 +14,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" />
 
-  <View
+  <net.bonysoft.magicmirror.sfx.GlowView
+    android:id="@+id/glow_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/activity_background" />
