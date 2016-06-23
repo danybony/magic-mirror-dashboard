@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
+import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.v4.util.SparseArrayCompat;
 import android.util.AttributeSet;
@@ -48,6 +49,7 @@ public class GlowView extends View {
         return previousDrawable;
     }
 
+    @ColorInt
     private int getColor(@ColorRes int colorRes) {
         return getResources().getColor(colorRes);
     }
