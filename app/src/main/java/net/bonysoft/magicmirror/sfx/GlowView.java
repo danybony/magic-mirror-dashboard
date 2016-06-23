@@ -20,7 +20,7 @@ public class GlowView extends View {
         super(context, attrs);
     }
 
-    public void transistToColor(@ColorRes int colorRes) {
+    public void transitionToColor(@ColorRes int colorRes) {
         // TODO timeout if too fast
         Drawable previousBackground = getPreviousDrawableSafely();
         TransitionDrawable transitionDrawable = new TransitionDrawable(new Drawable[]{

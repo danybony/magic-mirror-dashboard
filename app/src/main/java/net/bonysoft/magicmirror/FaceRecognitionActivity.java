@@ -176,7 +176,7 @@ public class FaceRecognitionActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     FacialExpressionEffects effects = mappings.forExpression(expression);
-                    glowView.transistToColor(effects.glowColorRes());
+                    glowView.transitionToColor(effects.glowColorRes());
                     faceStatus.setText(expression.toString());
                 }
             });
