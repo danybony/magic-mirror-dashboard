@@ -35,8 +35,4 @@
     <item name="android:textSize">@dimen/weather_condition_text</item>
   </style>
 
-  <style name="Label.FaceStatus">
-    <item name="android:textSize">@dimen/face_recognition_text</item>
-  </style>
-
 </resources>
