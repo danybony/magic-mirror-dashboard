@@ -20,6 +20,7 @@ import net.bonysoft.magicmirror.facerecognition.FaceCameraSource;
 import net.bonysoft.magicmirror.facerecognition.FaceDetectionUnavailableException;
 import net.bonysoft.magicmirror.facerecognition.FaceExpression;
 import net.bonysoft.magicmirror.facerecognition.FaceReactionSource;
+import net.bonysoft.magicmirror.facerecognition.FaceStatusView;
 import net.bonysoft.magicmirror.facerecognition.FaceTracker;
 import net.bonysoft.magicmirror.facerecognition.KeyToFaceMappings;
 import net.bonysoft.magicmirror.facerecognition.KeyboardFaceSource;
@@ -34,6 +35,7 @@ public class FaceRecognitionActivity extends AppCompatActivity {
     private CameraSourcePreview preview;
 
     private SystemUIHider systemUIHider;
+    private FaceStatusView faceStatus;
     private LookingEyes lookingEyes;
 
     @Override
@@ -41,7 +43,8 @@ public class FaceRecognitionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_face_recognition);
 
-        lookingEyes = (LookingEyes) findViewById(R.id.status);
+        lookingEyes = (LookingEyes) findViewById(R.id.looking_eyes);
+        faceStatus = (FaceStatusView) findViewById(R.id.status);
         preview = (CameraSourcePreview) findViewById(R.id.preview);
 
         systemUIHider = new SystemUIHider(findViewById(android.R.id.content));
@@ -168,8 +171,11 @@ public class FaceRecognitionActivity extends AppCompatActivity {
                 public void run() {
                     if (expression.isMissing()) {
                         lookingEyes.show();
+                        faceStatus.hide();
                     } else {
                         lookingEyes.hide();
+                        faceStatus.setExpression(expression);
+                        faceStatus.show();
                     }
                 }
             });
