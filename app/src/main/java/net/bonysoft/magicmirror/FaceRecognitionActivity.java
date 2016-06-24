@@ -166,7 +166,11 @@ public class FaceRecognitionActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    //lookingEyes.setText(expression.toString());
+                    if (expression.isMissing()) {
+                        lookingEyes.show();
+                    } else {
+                        lookingEyes.hide();
+                    }
                 }
             });
         }

@@ -17,4 +17,12 @@ public class LookingEyes extends ImageView {
 
         setImageResource(R.drawable.eyes_left);
     }
+
+    public void show() {
+        setVisibility(VISIBLE);
+    }
+
+    public void hide() {
+        setVisibility(GONE);
+    }
 }
