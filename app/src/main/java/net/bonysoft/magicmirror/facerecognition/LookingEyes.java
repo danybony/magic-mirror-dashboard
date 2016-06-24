@@ -2,6 +2,7 @@ package net.bonysoft.magicmirror.facerecognition;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
@@ -53,7 +54,10 @@ public class LookingEyes extends ImageView {
         @Override
         public void run() {
             updateLookingDirection(lookingDirection.next());
-            getHandler().postDelayed(this, LOOKING_DELAY_MILLIS);
+            Handler handler = getHandler();
+            if (handler != null) {
+                handler.postDelayed(this, LOOKING_DELAY_MILLIS);
+            }
         }
     };
 
