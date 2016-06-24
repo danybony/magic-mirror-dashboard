@@ -19,11 +19,21 @@
     android:layout_height="match_parent"
     android:background="@color/activity_background" />
 
-  <TextView
+  <net.bonysoft.magicmirror.facerecognition.LookingEyes
+    android:id="@+id/looking_eyes"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:contentDescription="@null"
+    tools:src="@drawable/eyes_left" />
+
+
+  <net.bonysoft.magicmirror.facerecognition.FaceStatusView
     android:id="@+id/status"
     style="@style/Label.FaceStatus"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="center" />
+    android:layout_gravity="bottom|center_horizontal" />
+
 
 </FrameLayout>

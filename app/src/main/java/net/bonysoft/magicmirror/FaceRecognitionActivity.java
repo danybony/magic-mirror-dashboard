@@ -9,7 +9,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.WindowManager;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -21,9 +20,11 @@ import net.bonysoft.magicmirror.facerecognition.FaceCameraSource;
 import net.bonysoft.magicmirror.facerecognition.FaceDetectionUnavailableException;
 import net.bonysoft.magicmirror.facerecognition.FaceExpression;
 import net.bonysoft.magicmirror.facerecognition.FaceReactionSource;
+import net.bonysoft.magicmirror.facerecognition.FaceStatusView;
 import net.bonysoft.magicmirror.facerecognition.FaceTracker;
 import net.bonysoft.magicmirror.facerecognition.KeyToFaceMappings;
 import net.bonysoft.magicmirror.facerecognition.KeyboardFaceSource;
+import net.bonysoft.magicmirror.facerecognition.LookingEyes;
 
 public class FaceRecognitionActivity extends AppCompatActivity {
 
@@ -34,14 +35,16 @@ public class FaceRecognitionActivity extends AppCompatActivity {
     private CameraSourcePreview preview;
 
     private SystemUIHider systemUIHider;
-    private TextView faceStatus;
+    private FaceStatusView faceStatus;
+    private LookingEyes lookingEyes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_face_recognition);
 
-        faceStatus = (TextView) findViewById(R.id.status);
+        lookingEyes = (LookingEyes) findViewById(R.id.looking_eyes);
+        faceStatus = (FaceStatusView) findViewById(R.id.status);
         preview = (CameraSourcePreview) findViewById(R.id.preview);
 
         systemUIHider = new SystemUIHider(findViewById(android.R.id.content));
@@ -166,7 +169,14 @@ public class FaceRecognitionActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    faceStatus.setText(expression.toString());
+                    if (expression.isMissing()) {
+                        lookingEyes.show();
+                        faceStatus.hide();
+                    } else {
+                        lookingEyes.hide();
+                        faceStatus.setExpression(expression);
+                        faceStatus.show();
+                    }
                 }
             });
         }

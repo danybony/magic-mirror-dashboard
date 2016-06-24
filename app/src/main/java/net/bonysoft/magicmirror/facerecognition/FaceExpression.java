@@ -30,4 +30,8 @@ public enum FaceExpression {
         }
         throw new DeveloperError("FaceExpression not found with smiling probability: " + smilingProbability);
     }
+
+    public boolean isMissing() {
+        return this == LOOKING;
+    }
 }
