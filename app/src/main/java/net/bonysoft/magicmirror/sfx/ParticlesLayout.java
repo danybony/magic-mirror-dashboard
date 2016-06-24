@@ -2,6 +2,7 @@ package net.bonysoft.magicmirror.sfx;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.v7.app.ActionBar;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -23,6 +24,7 @@ public class ParticlesLayout extends FrameLayout {
     public void initialise() {
         for (int i = 0; i < PARTICLE_COUNT; i++) {
             ImageView particleView = new ImageView(getContext());
+            particleView.setLayoutParams(new ActionBar.LayoutParams(200, 200));
             addView(particleView);
             particleViews.add(particleView);
         }
