@@ -25,8 +25,10 @@ import net.bonysoft.magicmirror.facerecognition.FaceReactionSource;
 import net.bonysoft.magicmirror.facerecognition.FaceTracker;
 import net.bonysoft.magicmirror.facerecognition.KeyToFaceMappings;
 import net.bonysoft.magicmirror.facerecognition.KeyboardFaceSource;
+import net.bonysoft.magicmirror.sfx.DropAndBounceEffect;
 import net.bonysoft.magicmirror.sfx.FacialExpressionEffects;
 import net.bonysoft.magicmirror.sfx.GlowView;
+import net.bonysoft.magicmirror.sfx.Particle;
 import net.bonysoft.magicmirror.sfx.ParticlesLayout;
 import net.bonysoft.magicmirror.sfx.SfxMappings;
 
@@ -53,6 +55,7 @@ public class FaceRecognitionActivity extends AppCompatActivity {
         glowView = Views.findById(this, R.id.glow_background);
         particlesView = Views.findById(this, R.id.particles);
         particlesView.initialise();
+
         systemUIHider = new SystemUIHider(findViewById(android.R.id.content));
         keepScreenOn();
 
@@ -82,7 +85,8 @@ public class FaceRecognitionActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        particlesView.startParticles();
+        Particle justAParticleEffect = new Particle(R.mipmap.ic_launcher, new DropAndBounceEffect());
+        particlesView.startParticles(justAParticleEffect);
     }
 
     private boolean isUsingCamera() {
