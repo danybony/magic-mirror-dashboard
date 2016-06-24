@@ -58,7 +58,7 @@ public class GlowView extends ImageView {
         if (bitmapDrawable == null) {
             GradientDrawable gradientDrawable = new GradientDrawable();
             gradientDrawable.setGradientType(GradientDrawable.RADIAL_GRADIENT);
-            gradientDrawable.setGradientRadius(getWidth() / 2);
+            gradientDrawable.setGradientRadius(getWidth() / 4);
             gradientDrawable.setColors(new int[]{
                     getColor(colorRes),
                     Color.BLACK
@@ -73,7 +73,7 @@ public class GlowView extends ImageView {
     }
 
     private Bitmap drawableToBitmap(Drawable drawable) {
-        Bitmap bitmap = Bitmap.createBitmap(getWidth(), getWidth(), Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(getWidth() / 2, getWidth() / 2, Bitmap.Config.RGB_565);
 
         Canvas canvas = new Canvas(bitmap);
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
