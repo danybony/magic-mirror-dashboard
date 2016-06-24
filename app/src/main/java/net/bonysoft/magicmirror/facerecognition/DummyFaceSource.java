@@ -12,7 +12,13 @@ public class DummyFaceSource implements FaceReactionSource {
     private final Handler handler;
     private final Random smilingProbabilityGenerator;
 
-    private Runnable updateFaceRunnable = new Runnable() {
+    public DummyFaceSource(FaceTracker.FaceListener faceListener, Handler handler) {
+        this.faceListener = faceListener;
+        this.handler = handler;
+        this.smilingProbabilityGenerator = new Random();
+    }
+
+    private final Runnable updateFaceRunnable = new Runnable() {
         @Override
         public void run() {
             FaceExpression expression = FaceExpression.fromSmilingProbability(smilingProbabilityGenerator.nextFloat());
@@ -20,12 +26,6 @@ public class DummyFaceSource implements FaceReactionSource {
             handler.postDelayed(this, DELAY_MILLIS);
         }
     };
-
-    public DummyFaceSource(FaceTracker.FaceListener faceListener, Handler handler) {
-        this.faceListener = faceListener;
-        this.handler = handler;
-        this.smilingProbabilityGenerator = new Random();
-    }
 
     @Override
     public void start() {
