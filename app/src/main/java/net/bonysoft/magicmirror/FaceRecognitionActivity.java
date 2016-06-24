@@ -27,6 +27,7 @@ import net.bonysoft.magicmirror.facerecognition.KeyToFaceMappings;
 import net.bonysoft.magicmirror.facerecognition.KeyboardFaceSource;
 import net.bonysoft.magicmirror.sfx.FacialExpressionEffects;
 import net.bonysoft.magicmirror.sfx.GlowView;
+import net.bonysoft.magicmirror.sfx.ParticlesLayout;
 import net.bonysoft.magicmirror.sfx.SfxMappings;
 
 public class FaceRecognitionActivity extends AppCompatActivity {
@@ -40,6 +41,7 @@ public class FaceRecognitionActivity extends AppCompatActivity {
     private SystemUIHider systemUIHider;
     private TextView faceStatus;
     private GlowView glowView;
+    private ParticlesLayout particlesView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,7 @@ public class FaceRecognitionActivity extends AppCompatActivity {
         faceStatus = Views.findById(this, R.id.status);
         preview = Views.findById(this, R.id.preview);
         glowView = Views.findById(this, R.id.glow_background);
+        particlesView = Views.findById(this, R.id.particles);
 
         systemUIHider = new SystemUIHider(findViewById(android.R.id.content));
         keepScreenOn();
@@ -74,6 +77,12 @@ public class FaceRecognitionActivity extends AppCompatActivity {
         } else {
             createKeyboardSource();
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        particlesView.startParticles();
     }
 
     private boolean isUsingCamera() {
@@ -172,6 +181,7 @@ public class FaceRecognitionActivity extends AppCompatActivity {
 
         @Override
         public void onNewFace(final FaceExpression expression) {
+
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
