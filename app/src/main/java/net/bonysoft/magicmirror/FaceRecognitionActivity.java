@@ -146,6 +146,7 @@ public class FaceRecognitionActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         preview.stop();
+        lookingEyes.hide();
         systemUIHider.showSystemUi();
     }
 
