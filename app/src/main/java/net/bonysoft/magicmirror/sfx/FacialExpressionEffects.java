@@ -5,11 +5,11 @@ import android.support.annotation.ColorRes;
 import net.bonysoft.magicmirror.R;
 
 public enum FacialExpressionEffects {
-    LOOKING(R.color.black),
-    NEUTRAL(R.color.green),
-    SAD(R.color.blue_of_sadness),
-    HAPPY(R.color.golden_hapiness),
-    JOYFUL(R.color.jolly_pink);
+    SEARCHING(R.color.black),
+    NO_EXPRESSION(R.color.green),
+    SADNESS(R.color.blue_of_sadness),
+    HAPPINESS(R.color.golden_hapiness),
+    JOYFULNESS(R.color.jolly_pink);
 
     @ColorRes
     private final int glowColorRes;

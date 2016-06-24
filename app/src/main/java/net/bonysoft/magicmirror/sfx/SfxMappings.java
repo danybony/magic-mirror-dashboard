@@ -11,11 +11,11 @@ public final class SfxMappings {
 
     public static SfxMappings newInstance() {
         Map<FaceExpression, FacialExpressionEffects> mappings = new HashMap<>();
-        mappings.put(FaceExpression.SAD, FacialExpressionEffects.SAD);
-        mappings.put(FaceExpression.NEUTRAL, FacialExpressionEffects.NEUTRAL);
-        mappings.put(FaceExpression.HAPPY, FacialExpressionEffects.HAPPY);
-        mappings.put(FaceExpression.JOYFUL, FacialExpressionEffects.JOYFUL);
-        mappings.put(FaceExpression.LOOKING, FacialExpressionEffects.LOOKING);
+        mappings.put(FaceExpression.NEUTRAL, FacialExpressionEffects.NO_EXPRESSION);
+        mappings.put(FaceExpression.SAD, FacialExpressionEffects.SADNESS);
+        mappings.put(FaceExpression.HAPPY, FacialExpressionEffects.HAPPINESS);
+        mappings.put(FaceExpression.JOYFUL, FacialExpressionEffects.JOYFULNESS);
+        mappings.put(FaceExpression.LOOKING, FacialExpressionEffects.SEARCHING);
         return new SfxMappings(mappings);
     }
 
