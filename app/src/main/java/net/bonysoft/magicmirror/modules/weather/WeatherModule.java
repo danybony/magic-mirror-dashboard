@@ -25,8 +25,8 @@ public class WeatherModule implements DashboardModule {
     private static final long MIN_UPDATE_DELAY = TimeUnit.MINUTES.toMillis(10);
     private static final String API_KEY = BuildConfig.OPENWEATHERMAP_API_KEY;
 
-    private static final double BERLIN_LONGITUDE = 13.4368453;
-    private static final double BERLIN_LATITUDE = 52.5084802;
+    private static final double LIVERPOOL_LONGITUDE = -2.9982376;
+    private static final double LIVERPOOL_LATITUDE = 53.4097205;
 
     private final WeatherClient client;
     private final WeatherListener weatherListener;
@@ -75,8 +75,8 @@ public class WeatherModule implements DashboardModule {
         lastUpdate = System.currentTimeMillis();
 
         // TODO: get current devicePosition
-        double longitude = BERLIN_LONGITUDE;
-        double latitude = BERLIN_LATITUDE;
+        double longitude = LIVERPOOL_LONGITUDE;
+        double latitude = LIVERPOOL_LATITUDE;
         WeatherRequest request = new WeatherRequest(longitude, latitude);
 
         client.getCurrentCondition(request, new CurrentWeatherListener(weatherListener));
