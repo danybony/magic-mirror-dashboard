@@ -25,6 +25,7 @@
   </net.bonysoft.magicmirror.sfx.ParticlesLayout>
 
   <net.bonysoft.magicmirror.facerecognition.LookingEyes
+    android:background="@null"
     android:id="@+id/looking_eyes"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
