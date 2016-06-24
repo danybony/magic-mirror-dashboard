@@ -12,8 +12,7 @@ import java.util.List;
 
 public class ParticlesLayout extends FrameLayout {
 
-    private static final long REPEAT_DURATION = 1000L;
-    private static final int PARTICLE_COUNT = 50;
+    private static final int PARTICLE_COUNT = 5;
 
     private final List<ImageView> particleViews = new ArrayList<>(PARTICLE_COUNT);
 
@@ -24,7 +23,7 @@ public class ParticlesLayout extends FrameLayout {
     public void initialise() {
         for (int i = 0; i < PARTICLE_COUNT; i++) {
             ImageView particleView = new ImageView(getContext());
-            particleView.setLayoutParams(new ActionBar.LayoutParams(200, 200));
+            particleView.setLayoutParams(new ActionBar.LayoutParams(50, 50));
             addView(particleView);
             particleViews.add(particleView);
         }
@@ -32,14 +31,14 @@ public class ParticlesLayout extends FrameLayout {
 
     public void startParticles(Particle particle) {
         applyDrawableFrom(particle);
-        ParticleRunnable particleRunnable = new ParticleRunnable(this, particleViews, particle.getEffect());
-        postDelayed(particleRunnable, REPEAT_DURATION);
+        ParticleEffectRunner runner = new ParticleEffectRunner(particle.getEffect(), particleViews, this);
+        runner.run();
     }
 
     private void applyDrawableFrom(Particle particle) {
         Drawable drawable = getResources().getDrawable(particle.drawableResId());
-        for (ImageView particleview : particleViews) {
-            particleview.setImageDrawable(drawable);
+        for (ImageView particleView : particleViews) {
+            particleView.setImageDrawable(drawable);
         }
     }
 

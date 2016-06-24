@@ -1,11 +1,10 @@
 package net.bonysoft.magicmirror.sfx;
 
-import android.widget.ImageView;
-
-import java.util.List;
+import android.view.View;
 
 public interface ParticleEffect {
 
-    void animateParticles(List<ImageView> particleViews, int parentWidth, int parentHeight);
+    void animateParticle(View particleViews, int parentWidth, int parentHeight);
 
+    int delayInBetween();
 }

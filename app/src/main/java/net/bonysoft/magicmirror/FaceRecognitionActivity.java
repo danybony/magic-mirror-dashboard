@@ -25,7 +25,7 @@ import net.bonysoft.magicmirror.facerecognition.FaceReactionSource;
 import net.bonysoft.magicmirror.facerecognition.FaceTracker;
 import net.bonysoft.magicmirror.facerecognition.KeyToFaceMappings;
 import net.bonysoft.magicmirror.facerecognition.KeyboardFaceSource;
-import net.bonysoft.magicmirror.sfx.DropAndBounceEffect;
+import net.bonysoft.magicmirror.sfx.RainDropEffect;
 import net.bonysoft.magicmirror.sfx.FacialExpressionEffects;
 import net.bonysoft.magicmirror.sfx.GlowView;
 import net.bonysoft.magicmirror.sfx.Particle;
@@ -85,7 +85,7 @@ public class FaceRecognitionActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Particle justAParticleEffect = new Particle(R.mipmap.ic_launcher, new DropAndBounceEffect());
+        Particle justAParticleEffect = new Particle(R.drawable.rain_drop, new RainDropEffect());
         particlesView.startParticles(justAParticleEffect);
     }
 
