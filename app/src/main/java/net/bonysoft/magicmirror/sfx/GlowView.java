@@ -19,7 +19,7 @@ public class GlowView extends ImageView {
 
     private static final int TRANSITION_DURATION = 700;
 
-    private final SparseArrayCompat<BitmapDrawable> colors = new SparseArrayCompat<>();
+    private final SparseArrayCompat<BitmapDrawable> bitmapDrawables = new SparseArrayCompat<>();
 
     public GlowView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -49,12 +49,12 @@ public class GlowView extends ImageView {
     private TransitionDrawable createTransitionDrawable(Drawable previousBackground, @ColorRes int colorRes) {
         return new TransitionDrawable(new Drawable[]{
                 previousBackground,
-                getOrCreateColorDrawableFor(colorRes)
+                getOrCreateBitmapDrawableFor(colorRes)
         });
     }
 
-    private BitmapDrawable getOrCreateColorDrawableFor(@ColorRes int colorRes) {
-        BitmapDrawable bitmapDrawable = colors.get(colorRes);
+    private BitmapDrawable getOrCreateBitmapDrawableFor(@ColorRes int colorRes) {
+        BitmapDrawable bitmapDrawable = bitmapDrawables.get(colorRes);
         if (bitmapDrawable == null) {
             GradientDrawable gradientDrawable = new GradientDrawable();
             gradientDrawable.setGradientType(GradientDrawable.RADIAL_GRADIENT);
@@ -67,7 +67,7 @@ public class GlowView extends ImageView {
             Bitmap bitmap = drawableToBitmap(gradientDrawable);
             bitmapDrawable = new BitmapDrawable(getResources(), bitmap);
 
-            colors.put(colorRes, bitmapDrawable);
+            bitmapDrawables.put(colorRes, bitmapDrawable);
         }
         return bitmapDrawable;
     }
