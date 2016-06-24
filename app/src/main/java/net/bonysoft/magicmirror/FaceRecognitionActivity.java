@@ -52,7 +52,7 @@ public class FaceRecognitionActivity extends AppCompatActivity {
         preview = Views.findById(this, R.id.preview);
         glowView = Views.findById(this, R.id.glow_background);
         particlesView = Views.findById(this, R.id.particles);
-
+        particlesView.initialise();
         systemUIHider = new SystemUIHider(findViewById(android.R.id.content));
         keepScreenOn();
 
