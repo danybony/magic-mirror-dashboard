@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
-import com.novoda.notils.logger.simple.Log;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class RainDropEffect implements ParticleEffect {
@@ -18,21 +18,31 @@ public class RainDropEffect implements ParticleEffect {
     private static final Random RANDOM = new Random(SystemClock.currentThreadTimeMillis());
     private final Interpolator INTERPOLATOR = new LinearInterpolator();
 
+    private List<ObjectAnimator> animators = new ArrayList<>();
+
     @Override
     public void animateParticle(View particleView, int parentWidth, int parentHeight) {
         float x = RANDOM.nextFloat() * parentWidth;
-        Log.d("x: " + x);
         particleView.setX(x);
-        ObjectAnimator tossUp = ObjectAnimator.ofFloat(particleView, "y", 0, parentHeight);
-        tossUp.setDuration(FALL_DURATION);
-        tossUp.setInterpolator(INTERPOLATOR);
-        tossUp.setRepeatMode(ValueAnimator.RESTART);
-        tossUp.setRepeatCount(ValueAnimator.INFINITE);
-        tossUp.start();
+        ObjectAnimator animator = ObjectAnimator.ofFloat(particleView, "y", 0, parentHeight);
+        animator.setDuration(FALL_DURATION + RANDOM.nextInt(250));
+        animator.setInterpolator(INTERPOLATOR);
+        animator.setRepeatMode(ValueAnimator.RESTART);
+        animator.setRepeatCount(ValueAnimator.INFINITE);
+        animator.start();
+        animators.add(animator);
+    }
+
+    @Override
+    public void stop() {
+        for (ObjectAnimator animator : animators) {
+            animator.setRepeatCount(1);
+        }
+        animators.clear();
     }
 
     @Override
     public int delayInBetween() {
-        return 1000 + RANDOM.nextInt(1000);
+        return 250 + RANDOM.nextInt(250);
     }
 }

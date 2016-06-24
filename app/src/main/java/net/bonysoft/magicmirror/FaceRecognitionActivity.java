@@ -25,10 +25,8 @@ import net.bonysoft.magicmirror.facerecognition.FaceReactionSource;
 import net.bonysoft.magicmirror.facerecognition.FaceTracker;
 import net.bonysoft.magicmirror.facerecognition.KeyToFaceMappings;
 import net.bonysoft.magicmirror.facerecognition.KeyboardFaceSource;
-import net.bonysoft.magicmirror.sfx.RainDropEffect;
 import net.bonysoft.magicmirror.sfx.FacialExpressionEffects;
 import net.bonysoft.magicmirror.sfx.GlowView;
-import net.bonysoft.magicmirror.sfx.Particle;
 import net.bonysoft.magicmirror.sfx.ParticlesLayout;
 import net.bonysoft.magicmirror.sfx.SfxMappings;
 
@@ -80,13 +78,6 @@ public class FaceRecognitionActivity extends AppCompatActivity {
         } else {
             createKeyboardSource();
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Particle justAParticleEffect = new Particle(R.drawable.rain_drop, new RainDropEffect());
-        particlesView.startParticles(justAParticleEffect);
     }
 
     private boolean isUsingCamera() {
@@ -192,6 +183,12 @@ public class FaceRecognitionActivity extends AppCompatActivity {
                     FacialExpressionEffects effects = mappings.forExpression(expression);
                     glowView.transitionToColor(effects.glowColorRes());
                     faceStatus.setText(expression.toString());
+
+                    if (effects.hasParticle()) {
+                        particlesView.startParticles(effects.getParticle());
+                    } else {
+                        particlesView.stopParticles();
+                    }
                 }
             });
         }
