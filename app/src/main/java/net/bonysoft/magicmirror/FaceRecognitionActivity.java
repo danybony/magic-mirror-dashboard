@@ -9,7 +9,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.WindowManager;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -22,11 +21,14 @@ import net.bonysoft.magicmirror.facerecognition.FaceCameraSource;
 import net.bonysoft.magicmirror.facerecognition.FaceDetectionUnavailableException;
 import net.bonysoft.magicmirror.facerecognition.FaceExpression;
 import net.bonysoft.magicmirror.facerecognition.FaceReactionSource;
+import net.bonysoft.magicmirror.facerecognition.FaceStatusView;
 import net.bonysoft.magicmirror.facerecognition.FaceTracker;
 import net.bonysoft.magicmirror.facerecognition.KeyToFaceMappings;
 import net.bonysoft.magicmirror.facerecognition.KeyboardFaceSource;
+import net.bonysoft.magicmirror.facerecognition.LookingEyes;
 import net.bonysoft.magicmirror.sfx.FacialExpressionEffects;
 import net.bonysoft.magicmirror.sfx.GlowView;
+import net.bonysoft.magicmirror.sfx.ParticlesLayout;
 import net.bonysoft.magicmirror.sfx.SfxMappings;
 
 public class FaceRecognitionActivity extends AppCompatActivity {
@@ -38,17 +40,22 @@ public class FaceRecognitionActivity extends AppCompatActivity {
     private CameraSourcePreview preview;
 
     private SystemUIHider systemUIHider;
-    private TextView faceStatus;
+    private FaceStatusView faceStatus;
+    private LookingEyes lookingEyes;
     private GlowView glowView;
+    private ParticlesLayout particlesView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_face_recognition);
 
-        faceStatus = Views.findById(this, R.id.status);
-        preview = Views.findById(this, R.id.preview);
+        lookingEyes = (LookingEyes) findViewById(R.id.looking_eyes);
+        faceStatus = (FaceStatusView) findViewById(R.id.status);
+        preview = (CameraSourcePreview) findViewById(R.id.preview);
         glowView = Views.findById(this, R.id.glow_background);
+        particlesView = Views.findById(this, R.id.particles);
+        particlesView.initialise();
 
         systemUIHider = new SystemUIHider(findViewById(android.R.id.content));
         keepScreenOn();
@@ -139,6 +146,7 @@ public class FaceRecognitionActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         preview.stop();
+        lookingEyes.hide();
         systemUIHider.showSystemUi();
     }
 
@@ -172,12 +180,26 @@ public class FaceRecognitionActivity extends AppCompatActivity {
 
         @Override
         public void onNewFace(final FaceExpression expression) {
+
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     FacialExpressionEffects effects = mappings.forExpression(expression);
                     glowView.transitionToColor(effects.glowColorRes());
-                    faceStatus.setText(expression.toString());
+                    if (effects.hasParticle()) {
+                        particlesView.startParticles(effects.getParticle());
+                    } else {
+                        particlesView.stopParticles();
+                    }
+                    if (expression.isMissing()) {
+                        lookingEyes.show();
+                        faceStatus.hide();
+                    } else {
+                        lookingEyes.hide();
+                        faceStatus.setExpression(expression);
+                        faceStatus.show();
+                    }
+
                 }
             });
         }

@@ -9,6 +9,8 @@ public class FaceTracker extends Tracker<Face> {
 
     private final FaceListener faceListener;
 
+    private FaceExpression currentExpression;
+
     private FaceTracker(FaceListener faceListener) {
         this.faceListener = faceListener;
     }
@@ -17,17 +19,24 @@ public class FaceTracker extends Tracker<Face> {
     public void onUpdate(FaceDetector.Detections<Face> detectionResults, Face face) {
         float smiling = face.getIsSmilingProbability();
         FaceExpression expression = FaceExpression.fromSmilingProbability(smiling);
-        faceListener.onNewFace(expression);
+        setNewFace(expression);
+    }
+
+    private void setNewFace(FaceExpression expression) {
+        if (currentExpression != expression) {
+            faceListener.onNewFace(expression);
+            currentExpression = expression;
+        }
     }
 
     @Override
     public void onMissing(FaceDetector.Detections<Face> detectionResults) {
-        faceListener.onNewFace(FaceExpression.LOOKING);
+        setNewFace(FaceExpression.LOOKING);
     }
 
     @Override
     public void onDone() {
-        faceListener.onNewFace(FaceExpression.LOOKING);
+        setNewFace(FaceExpression.LOOKING);
     }
 
     public static class Factory implements MultiProcessor.Factory<Face> {

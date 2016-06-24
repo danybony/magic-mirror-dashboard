@@ -10,18 +10,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" />
 
-  <net.bonysoft.magicmirror.sfx.GlowView
-    android:id="@+id/glow_background"
+  <net.bonysoft.magicmirror.sfx.ParticlesLayout
+    android:id="@+id/particles"
     android:layout_width="match_parent"
-    android:scaleType="fitXY"
-    android:layout_height="match_parent"
-    android:background="@color/activity_background" />
+    android:layout_height="match_parent">
 
-  <TextView
+    <net.bonysoft.magicmirror.sfx.GlowView
+      android:id="@+id/glow_background"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/activity_background"
+      android:scaleType="fitXY" />
+
+  </net.bonysoft.magicmirror.sfx.ParticlesLayout>
+
+  <net.bonysoft.magicmirror.facerecognition.LookingEyes
+    android:background="@null"
+    android:id="@+id/looking_eyes"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:contentDescription="@null"
+    tools:src="@drawable/eyes_left" />
+
+
+  <net.bonysoft.magicmirror.facerecognition.FaceStatusView
     android:id="@+id/status"
     style="@style/Label.FaceStatus"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="center" />
+    android:layout_gravity="bottom|center_horizontal" />
+
 
 </FrameLayout>
