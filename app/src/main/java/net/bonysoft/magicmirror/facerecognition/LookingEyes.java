@@ -1,6 +1,7 @@
 package net.bonysoft.magicmirror.facerecognition;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
@@ -9,6 +10,9 @@ import net.bonysoft.magicmirror.R;
 public class LookingEyes extends ImageView {
 
     private static final long LOOKING_DELAY_MILLIS = 500;
+
+    private final Drawable leftDrawable;
+    private final Drawable rightDrawable;
 
     private LookingDirection lookingDirection;
 
@@ -19,20 +23,24 @@ public class LookingEyes extends ImageView {
     public LookingEyes(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
+        leftDrawable = getResources().getDrawable(R.drawable.eyes_left);
+        rightDrawable = getResources().getDrawable(R.drawable.eyes_right);
+
         updateLookingDirection(LookingDirection.LEFT);
     }
 
     private void updateLookingDirection(LookingDirection direction) {
         lookingDirection = direction;
         if (direction == LookingDirection.LEFT) {
-            setImageResource(R.drawable.eyes_left);
+            setImageDrawable(leftDrawable);
         } else {
-            setImageResource(R.drawable.eyes_right);
+            setImageDrawable(rightDrawable);
         }
     }
 
     public void show() {
         setVisibility(VISIBLE);
+        getHandler().removeCallbacks(swapDirection);
         getHandler().postDelayed(swapDirection, LOOKING_DELAY_MILLIS);
     }
 
