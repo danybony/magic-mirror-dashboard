@@ -2,6 +2,8 @@ package net.bonysoft.magicmirror.facerecognition;
 
 import com.novoda.notils.exception.DeveloperError;
 
+import net.bonysoft.magicmirror.sfx.Particle;
+
 public enum FaceExpression {
     SAD(0.05f, 0x1F614),
     NEUTRAL(0.25f, 0x1F613),

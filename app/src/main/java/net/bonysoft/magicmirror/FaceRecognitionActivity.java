@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.novoda.notils.caster.Views;
 import com.novoda.notils.logger.simple.Log;
 
 import net.bonysoft.magicmirror.facerecognition.CameraSourcePreview;
@@ -25,6 +26,10 @@ import net.bonysoft.magicmirror.facerecognition.FaceTracker;
 import net.bonysoft.magicmirror.facerecognition.KeyToFaceMappings;
 import net.bonysoft.magicmirror.facerecognition.KeyboardFaceSource;
 import net.bonysoft.magicmirror.facerecognition.LookingEyes;
+import net.bonysoft.magicmirror.sfx.FacialExpressionEffects;
+import net.bonysoft.magicmirror.sfx.GlowView;
+import net.bonysoft.magicmirror.sfx.ParticlesLayout;
+import net.bonysoft.magicmirror.sfx.SfxMappings;
 
 public class FaceRecognitionActivity extends AppCompatActivity {
 
@@ -37,6 +42,8 @@ public class FaceRecognitionActivity extends AppCompatActivity {
     private SystemUIHider systemUIHider;
     private FaceStatusView faceStatus;
     private LookingEyes lookingEyes;
+    private GlowView glowView;
+    private ParticlesLayout particlesView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +53,9 @@ public class FaceRecognitionActivity extends AppCompatActivity {
         lookingEyes = (LookingEyes) findViewById(R.id.looking_eyes);
         faceStatus = (FaceStatusView) findViewById(R.id.status);
         preview = (CameraSourcePreview) findViewById(R.id.preview);
+        glowView = Views.findById(this, R.id.glow_background);
+        particlesView = Views.findById(this, R.id.particles);
+        particlesView.initialise();
 
         systemUIHider = new SystemUIHider(findViewById(android.R.id.content));
         keepScreenOn();
@@ -136,6 +146,7 @@ public class FaceRecognitionActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         preview.stop();
+        lookingEyes.hide();
         systemUIHider.showSystemUi();
     }
 
@@ -164,11 +175,22 @@ public class FaceRecognitionActivity extends AppCompatActivity {
     }
 
     private final FaceTracker.FaceListener faceListener = new FaceTracker.FaceListener() {
+
+        private final SfxMappings mappings = SfxMappings.newInstance();
+
         @Override
         public void onNewFace(final FaceExpression expression) {
+
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    FacialExpressionEffects effects = mappings.forExpression(expression);
+                    glowView.transitionToColor(effects.glowColorRes());
+                    if (effects.hasParticle()) {
+                        particlesView.startParticles(effects.getParticle());
+                    } else {
+                        particlesView.stopParticles();
+                    }
                     if (expression.isMissing()) {
                         lookingEyes.show();
                         faceStatus.hide();
@@ -177,6 +199,7 @@ public class FaceRecognitionActivity extends AppCompatActivity {
                         faceStatus.setExpression(expression);
                         faceStatus.show();
                     }
+
                 }
             });
         }
