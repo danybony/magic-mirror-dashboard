@@ -25,6 +25,16 @@
     <item name="android:textSize">@dimen/tweet_text</item>
   </style>
 
+  <style name="Label.TodoItem">
+    <item name="android:textSize">@dimen/todo_item</item>
+  </style>
+
+  <style name="TodoCheckBox"
+    parent="Theme.AppCompat.Light">
+    <item name="colorControlNormal">@android:color/white</item>
+    <item name="colorControlActivated">@android:color/white</item>
+  </style>
+
   <style name="Label.Weather" />
 
   <style name="Label.Weather.Temperature">

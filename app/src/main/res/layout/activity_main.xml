@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
@@ -10,8 +10,11 @@
   tools:context="net.bonysoft.magicmirror.MainActivity">
 
   <LinearLayout
+    android:id="@+id/time_container"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
     android:orientation="vertical">
 
     <TextView
@@ -32,15 +35,37 @@
 
   <TextView
     android:id="@+id/label_tweet"
-    style="@style/Label.Date"
+    style="@style/Label.Tweet"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_above="@+id/weather_container"
+    android:layout_below="@+id/time_container"
     android:layout_gravity="center_vertical"
+    android:visibility="gone"
     tools:text="Tweeeet" />
 
-  <LinearLayout
+  <FrameLayout
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_above="@+id/weather_container"
+    android:layout_below="@+id/time_container">
+
+    <ListView
+      android:id="@+id/todo_list"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_vertical"
+      android:divider="@color/activity_background" />
+
+  </FrameLayout>
+
+  <LinearLayout
+    android:id="@+id/weather_container"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
     android:layout_gravity="bottom"
     android:orientation="vertical">
 
@@ -65,4 +90,4 @@
 
   </LinearLayout>
 
-</FrameLayout>
+</RelativeLayout>

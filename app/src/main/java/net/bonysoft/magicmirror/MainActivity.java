@@ -14,7 +14,9 @@ import android.text.style.StyleSpan;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.novoda.notils.caster.Views;
@@ -27,6 +29,7 @@ import java.util.List;
 import net.bonysoft.magicmirror.modules.DashboardModule;
 import net.bonysoft.magicmirror.modules.DashboardModuleComposite;
 import net.bonysoft.magicmirror.modules.time.TimeModule;
+import net.bonysoft.magicmirror.todo.TodoItemsAdapter;
 import net.bonysoft.magicmirror.modules.twitter.TwitterModule;
 import net.bonysoft.magicmirror.modules.weather.WeatherIconMapper;
 import net.bonysoft.magicmirror.modules.weather.WeatherInfo;
@@ -43,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView tweetLabel;
     private TextView weatherTemperatureLabel;
     private TextView todayForecastLabel;
+    private ListView todoList;
     private DashboardModule modules;
     private ImageView todayForecastIcon;
 
@@ -54,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         timeLabel = Views.findById(this, R.id.label_time);
         dateLabel = Views.findById(this, R.id.label_date);
         tweetLabel = Views.findById(this, R.id.label_tweet);
+        todoList = Views.findById(this, R.id.todo_list);
         weatherTemperatureLabel = Views.findById(this, R.id.label_weather_temperature);
         todayForecastLabel = Views.findById(this, R.id.label_today_forecast);
         todayForecastIcon = Views.findById(this, R.id.weather_icon);
@@ -62,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         keepScreenOn();
 
         createModules();
+        createTodoList();
     }
 
     private void keepScreenOn() {
@@ -72,9 +78,14 @@ public class MainActivity extends AppCompatActivity {
         List<DashboardModule> modulesList = new ArrayList<>();
         modulesList.add(new TimeModule(timeLabel, dateLabel));
         modulesList.add(WeatherModule.newInstance(this, weatherListener));
-        modulesList.add(TwitterModule.newInstance(this, tweetListener));
 
         modules = new DashboardModuleComposite(modulesList);
+    }
+
+    private void createTodoList() {
+        CharSequence[] todoItems = getResources().getTextArray(R.array.todo_items);
+        ArrayAdapter<CharSequence> adapter = new TodoItemsAdapter(this, R.layout.todo_list_item, todoItems);
+        todoList.setAdapter(adapter);
     }
 
     @Override
