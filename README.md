@@ -2,10 +2,10 @@
 Make your mirror even smarter!
 This app is meant to be installed on phones, tablets or TV sticks used in smart mirrors or similar always-on dashboards.
 
-##Development
+## Development
 In order to use all the features of the app, when building it from source, please make a copy of the `gradle.properties.example` file, rename it to `gradle.properties` and add the required keys.
 
-##License
+## License
 
 ```
    Copyright 2016 Daniele Bonaldo
